@@ -5,18 +5,26 @@
     <servlet-name>BlogServlet</servlet-name>
     <servlet-class>cn.com.jobedu.blog.BlogServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>BlogServlet</servlet-name>
-    <url-pattern>/servlet/BlogServlet</url-pattern>
-  </servlet-mapping>
-  
   <servlet>
       <servlet-name>GetBlogServlet</servlet-name>
       <servlet-class>cn.com.jobedu.blog.GetBlogServlet</servlet-class>
   </servlet>
+  <servlet>
+      <servlet-name>GetBlogListServlet</servlet-name>
+      <servlet-class>cn.com.jobedu.blog.GetBlogListServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>BlogServlet</servlet-name>
+    <url-pattern>/servlet/BlogServlet</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
       <servlet-name>GetBlogServlet</servlet-name>
       <url-pattern>/servlet/GetBlogServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+      <servlet-name>GetBlogListServlet</servlet-name>
+      <url-pattern>/servlet/GetBlogListServlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

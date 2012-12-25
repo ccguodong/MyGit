@@ -10,7 +10,7 @@
 
 <body>
 <p>请您输入您的博文内容</p>
-<p>&nbsp;</p>
+<p><a href="http://localhost:8080/blog/servlet/GetBlogListServlet">查看博客内容</a></p>
 <form id="form1" name="form1" method="post" action="/blog/servlet/BlogServlet">
   <table width="629" border="0">
     <tr>
