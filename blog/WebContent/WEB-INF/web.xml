@@ -21,6 +21,14 @@
     <servlet-name>DeleteBlogServlet</servlet-name>
     <servlet-class>cn.com.jobedu.blog.DeleteBlogServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>PreEditBlogServlet</servlet-name>
+    <servlet-class>cn.com.jobedu.blog.PreEditBlogServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>PostEditBlogServlet</servlet-name>
+    <servlet-class>cn.com.jobedu.blog.PostEditBlogServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>BlogServlet</servlet-name>
     <url-pattern>/servlet/BlogServlet</url-pattern>
@@ -40,6 +48,14 @@
   <servlet-mapping>
     <servlet-name>DeleteBlogServlet</servlet-name>
     <url-pattern>/servlet/DeleteBlogServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PreEditBlogServlet</servlet-name>
+    <url-pattern>/servlet/PreEditBlogServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PostEditBlogServlet</servlet-name>
+    <url-pattern>/servlet/PostEditBlogServlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>

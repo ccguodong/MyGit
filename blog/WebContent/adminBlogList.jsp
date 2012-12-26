@@ -28,7 +28,7 @@
     <tr>
       <td><%=blog.getId() %></td>
       <td><%=blog.getTitle() %></td>
-      <td><a href="#">修改</a>|<a href="/blog/servlet/DeleteBlogServlet?id=<%=blog.getId() %>">删除</a></td>
+      <td><a href="/blog/servlet/PreEditBlogServlet?id=<%=blog.getId() %>"">修改</a>|<a href="/blog/servlet/DeleteBlogServlet?id=<%=blog.getId() %>">删除</a></td>
     </tr>
     <%
     }
