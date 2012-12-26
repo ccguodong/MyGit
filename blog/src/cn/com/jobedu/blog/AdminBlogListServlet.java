@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class GetBlogListServlet extends HttpServlet {
+public class AdminBlogListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// 定义MySQL的数据库驱动程序
 	public static final String DBDRIVER = "org.gjt.mm.mysql.Driver";
@@ -24,10 +24,11 @@ public class GetBlogListServlet extends HttpServlet {
 	// MySQL数据库的连接用户名
 	public static final String DBUSER = "root";
 	// MySQL数据库的连接密码
-	public static final String DBPASS = "mysqladmin";	
+	public static final String DBPASS = "mysqladmin";
+
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		//声明一个List对象，以存放从数据库中的结果。特别注意！！此变量要声明为局部变量
+		//声明一个List对象，以存放从数据库中的结果
 		List<Blog> list=new ArrayList<Blog>();
 		try {
 			Connection conn = null; // 定义数据库连接
@@ -63,7 +64,7 @@ public class GetBlogListServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-        request.getRequestDispatcher("/displayBlogList.jsp").forward(request, response);
+        request.getRequestDispatcher("/adminBlogList.jsp").forward(request, response);
 	}
 
 }
