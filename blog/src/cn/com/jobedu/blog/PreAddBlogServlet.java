@@ -4,59 +4,61 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class PostEditBlogServlet extends HttpServlet {
+public class PreAddBlogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	// 定义MySQL的数据库驱动程序
 	public static final String DBDRIVER = "org.gjt.mm.mysql.Driver";
-	// 定义MySQL数据库的连接地址
 	public static final String DBURL = "jdbc:mysql://localhost:3306/blogdatabase";
-	// MySQL数据库的连接用户名
 	public static final String DBUSER = "root";
-	// MySQL数据库的连接密码
 	public static final String DBPASS = "mysqladmin";
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		list(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		int result = 0;
-		String message;
+	public void list(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		List<Category> list = new ArrayList<Category>();
 		try {
 			Connection conn = null; // 定义数据库连接
 			PreparedStatement pstmt = null; // 定义数据库操作对象
 			Class.forName(DBDRIVER); // 加载驱动程序
 			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-			String sql = "update blog set title=?,content=? where id=" + id;
+			String sql = "SELECT id,name,level FROM category order by level DESC,id DESC";
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
-			pstmt.setString(1, title);
-			pstmt.setString(2, content);
-			result = pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
+			// 用来计算从数据库中查询的条数
+			int sqlnum = 0;
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				int level = rs.getInt(3);
+				Category category = new Category();
+				category.setId(id);
+				category.setName(name);
+				category.setLevel(level);
+				list.add(sqlnum, category);
+				sqlnum++;
+			}
+			rs.close();
+			pstmt.close(); // 关闭操作
+			conn.close(); // 数据库关闭
 		} catch (SQLException e) {
 			System.out.println(e);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		if (result == 1) {
-			message = "您成功修改博客";
-		} else {
-			message = "您修改博客失败";
-		}
-		request.setAttribute("message", message);
-		request.getRequestDispatcher("/editResult.jsp").forward(request,
-				response);
+		request.setAttribute("list", list);
+		request.getRequestDispatcher("/addBlog.jsp").forward(request, response);
 	}
 }

@@ -33,7 +33,10 @@
     <servlet-name>CategoryServlet</servlet-name>
     <servlet-class>cn.com.jobedu.blog.CategoryServlet</servlet-class>
   </servlet>
-  
+  <servlet>
+    <servlet-name>PreAddBlogServlet</servlet-name>
+    <servlet-class>cn.com.jobedu.blog.PreAddBlogServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>AddBlogServlet</servlet-name>
     <url-pattern>/servlet/AddBlogServlet</url-pattern>
@@ -65,6 +68,10 @@
   <servlet-mapping>
     <servlet-name>CategoryServlet</servlet-name>
     <url-pattern>/servlet/CategoryServlet</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>PreAddBlogServlet</servlet-name>
+    <url-pattern>/servlet/PreAddBlogServlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
