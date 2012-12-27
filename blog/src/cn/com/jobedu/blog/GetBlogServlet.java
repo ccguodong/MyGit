@@ -26,6 +26,7 @@ public class GetBlogServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		//此时的id是取得链接上的id
 		String id = request.getParameter("id");
 		// System.out.println(id);测试
 		//每查询blog中的一条记录，就把它生成一个Blog对象

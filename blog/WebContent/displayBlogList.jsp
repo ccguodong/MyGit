@@ -22,7 +22,7 @@
 			<td><%=blog.getCreatedTime() %></td>
 		</tr>
 		<tr>
-			<td><a href="http://localhost:8080/blog/servlet/GetBlogServlet?id=<%=blog.getId()%>"><%=blog.getTitle() %></a></td>
+			<td><a href="http://localhost:8080/blog/servlet/GetBlogServlet?id=<%=blog.getId()%>" target="_blank"><%=blog.getTitle() %></a></td>
 		</tr>
 		<tr>
 			<td>
