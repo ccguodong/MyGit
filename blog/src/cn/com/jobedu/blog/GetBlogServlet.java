@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,8 +57,35 @@ public class GetBlogServlet extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		List<Comment> list=new ArrayList<Comment>();
+		int sqlnum=0;
+		try {
+			Connection conn = null; // 定义数据库连接
+			PreparedStatement pstmt = null; // 定义数据库操作对象
+			Class.forName(DBDRIVER); // 加载驱动程序
+			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+			String sql = "SELECT id,name,content,createdtime FROM comment where blog_id= "
+					+ id+" order by id desc";
+			pstmt = conn.prepareStatement(sql); // 预处理sql语句
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Comment comment=new Comment();
+				comment.setId(rs.getInt(1));
+				comment.setName(rs.getString(2));
+				comment.setContent(rs.getString(3));
+				comment.setCreatedtime(rs.getTimestamp(4));
+				list.add(sqlnum, comment);
+			}
+			rs.close();
+			pstmt.close(); // 关闭操作
+			conn.close(); // 数据库关闭
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		request.setAttribute("blog", blog);
+		request.setAttribute("list", list);
         request.getRequestDispatcher("/displayBlog.jsp").forward(request, response);
 	}
-
 }
