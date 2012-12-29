@@ -15,10 +15,16 @@
     <td><a href="http://localhost:8080/blog/servlet/AdminBlogListServlet">管理博文</a></td>
   </tr>
   <tr>
+    <td><a href="http://localhost:8080/blog/addCategory.jsp">添加分类</a></td>
+  </tr>
+  <tr>
     <td><a href="http://localhost:8080/blog/servlet/CategoryServlet?method=list">管理分类</a></td>
   </tr>
   <tr>
     <td><a href="http://localhost:8080/blog/servlet/GetBlogListServlet">查看博文</a></td>
+  </tr>
+  <tr>
+    <td><a href="http://localhost:8080/blog/servlet/CommentServlet?method=list">管理评论</a></td>
   </tr>
 </table>
 </body>
