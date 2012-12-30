@@ -24,29 +24,30 @@ public class GetBlogListServlet extends HttpServlet {
 	// MySQL数据库的连接用户名
 	public static final String DBUSER = "root";
 	// MySQL数据库的连接密码
-	public static final String DBPASS = "mysqladmin";	
+	public static final String DBPASS = "mysqladmin";
+
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		//声明一个List对象，以存放从数据库中的结果。特别注意！！此变量要声明为局部变量
-		List<Blog> list=new ArrayList<Blog>();
+		// 声明一个List对象，以存放从数据库中的结果。特别注意！！此变量要声明为局部变量
+		List<Blog> list = new ArrayList<Blog>();
 		try {
 			Connection conn = null; // 定义数据库连接
 			PreparedStatement pstmt = null; // 定义数据库操作对象
 			Class.forName(DBDRIVER); // 加载驱动程序
 			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-			//查询blog表中的全部数据并按降序排列
+			// 查询blog表中的全部数据并按降序排列
 			String sql = "SELECT id,title,content,createdtime FROM blog order by id desc";
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
 			ResultSet rs = pstmt.executeQuery();
-			//用来计算从数据库中查询的条数
-			int sqlnum=0;
-			//把从数据库中查询的每条语句实例为一个Blog对象，然后添加到list中
+			// 用来计算从数据库中查询的条数
+			int sqlnum = 0;
+			// 把从数据库中查询的每条语句实例为一个Blog对象，然后添加到list中
 			while (rs.next()) {
-				int id=rs.getInt(1);
-				String title=rs.getString(2);
-				String content=rs.getString(3);
-				String createdtime=rs.getString(4);
-				Blog blog=new Blog();
+				int id = rs.getInt(1);
+				String title = rs.getString(2);
+				String content = rs.getString(3);
+				String createdtime = rs.getString(4);
+				Blog blog = new Blog();
 				blog.setId(id);
 				blog.setTitle(title);
 				blog.setContent(content);
@@ -63,7 +64,8 @@ public class GetBlogListServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-        request.getRequestDispatcher("/displayBlogList.jsp").forward(request, response);
+		request.getRequestDispatcher("/displayBlogList.jsp").forward(request,
+				response);
 	}
 
 }

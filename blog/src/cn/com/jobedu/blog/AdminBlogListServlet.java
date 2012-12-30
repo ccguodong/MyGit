@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class AdminBlogListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,43 +29,50 @@ public class AdminBlogListServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		//声明一个List对象，以存放从数据库中的结果。特别注意，list应该声明为局部变量
-		List<Blog> list=new ArrayList<Blog>();
-		try {
-			Connection conn = null; // 定义数据库连接
-			PreparedStatement pstmt = null; // 定义数据库操作对象
-			Class.forName(DBDRIVER); // 加载驱动程序
-			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-			//查询blog表中的全部数据并按降序排列
-			String sql = "SELECT id,title,content,createdtime FROM blog order by id desc";
-			pstmt = conn.prepareStatement(sql); // 预处理sql语句
-			ResultSet rs = pstmt.executeQuery();
-			//用来计算从数据库中查询的条数
-			int sqlnum=0;
-			//把从数据库中查询的每条语句实例为一个Blog对象，然后添加到list中
-			while (rs.next()) {
-				int id=rs.getInt(1);
-				String title=rs.getString(2);
-				String content=rs.getString(3);
-				String createdtime=rs.getString(4);
-				Blog blog=new Blog();
-				blog.setId(id);
-				blog.setTitle(title);
-				blog.setContent(content);
-				blog.setCreatedTime(createdtime);
-				list.add(sqlnum, blog);
-				sqlnum++;
-			}
-			rs.close();
-			pstmt.close(); // 关闭操作
-			conn.close(); // 数据库关闭
-		} catch (SQLException e) {
-			System.out.println(e);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		request.setAttribute("list", list);
-        request.getRequestDispatcher("/admin/adminBlogList.jsp").forward(request, response);
-	}
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("/blog/admin/login.jsp");
+		} else {
 
+			// 声明一个List对象，以存放从数据库中的结果。特别注意，list应该声明为局部变量
+			List<Blog> list = new ArrayList<Blog>();
+			try {
+				Connection conn = null; // 定义数据库连接
+				PreparedStatement pstmt = null; // 定义数据库操作对象
+				Class.forName(DBDRIVER); // 加载驱动程序
+				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+				// 查询blog表中的全部数据并按降序排列
+				String sql = "SELECT id,title,content,createdtime FROM blog order by id desc";
+				pstmt = conn.prepareStatement(sql); // 预处理sql语句
+				ResultSet rs = pstmt.executeQuery();
+				// 用来计算从数据库中查询的条数
+				int sqlnum = 0;
+				// 把从数据库中查询的每条语句实例为一个Blog对象，然后添加到list中
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					String title = rs.getString(2);
+					String content = rs.getString(3);
+					String createdtime = rs.getString(4);
+					Blog blog = new Blog();
+					blog.setId(id);
+					blog.setTitle(title);
+					blog.setContent(content);
+					blog.setCreatedTime(createdtime);
+					list.add(sqlnum, blog);
+					sqlnum++;
+				}
+				rs.close();
+				pstmt.close(); // 关闭操作
+				conn.close(); // 数据库关闭
+			} catch (SQLException e) {
+				System.out.println(e);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/admin/adminBlogList.jsp").forward(
+					request, response);
+		}
+	}
 }

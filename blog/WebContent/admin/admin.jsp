@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="cn.com.jobedu.blog.User"%>
+<%@include file="include.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,14 +9,8 @@
 
 <body>
 	<%
-		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			response.sendRedirect("/blog/admin/login.jsp");
-		}
-		else
-		{
-			out.print("欢迎" + user.getUsername());
-		}
+		if (user != null)
+			out.print("欢迎"+ user.getUsername());
 	%>
 	<table width="200" border="1" align="center" cellpadding="0"
 		cellspacing="0">

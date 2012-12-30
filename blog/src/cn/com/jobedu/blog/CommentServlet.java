@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class CommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -34,20 +35,24 @@ public class CommentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		String method = request.getParameter("method");
-		if (method.equals("add")) {
-			add(request, response);
-		} else if (method.equals("list")) {
-			list(request, response);
-		} else if (method.equals("delete")) {
-			delete(request, response);
-		} else if(method.equals("edit"))
-		{
-			preEdit(request, response);
-		} else if(method.equals("update"))
-		{
-			upDate(request, response);
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("/blog/admin/login.jsp");
+		} else {
+			request.setCharacterEncoding("UTF-8");
+			String method = request.getParameter("method");
+			if (method.equals("add")) {
+				add(request, response);
+			} else if (method.equals("list")) {
+				list(request, response);
+			} else if (method.equals("delete")) {
+				delete(request, response);
+			} else if (method.equals("edit")) {
+				preEdit(request, response);
+			} else if (method.equals("update")) {
+				upDate(request, response);
+			}
 		}
 	}
 
@@ -112,8 +117,8 @@ public class CommentServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/admin/adminCommentList.jsp").forward(request,
-				response);
+		request.getRequestDispatcher("/admin/adminCommentList.jsp").forward(
+				request, response);
 	}
 
 	public void delete(HttpServletRequest request, HttpServletResponse response)
@@ -142,7 +147,7 @@ public class CommentServlet extends HttpServlet {
 	public void preEdit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = request.getParameter("id");
-		Comment comment=new Comment();
+		Comment comment = new Comment();
 		try {
 			Connection conn = null; // 定义数据库连接
 			PreparedStatement pstmt = null; // 定义数据库操作对象
@@ -168,12 +173,13 @@ public class CommentServlet extends HttpServlet {
 		request.getRequestDispatcher("/admin/editComment.jsp").forward(request,
 				response);
 	}
+
 	public void upDate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		int id = Integer.parseInt(request.getParameter("id"));
-		String name=request.getParameter("name");
-		String content=request.getParameter("content");
+		String name = request.getParameter("name");
+		String content = request.getParameter("content");
 		if (name == null || name.equals(""))
 			name = "匿名";
 		try {
@@ -185,13 +191,13 @@ public class CommentServlet extends HttpServlet {
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
 			pstmt.setString(1, name);
 			pstmt.setString(2, content);
-            pstmt.executeUpdate();
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		request.getRequestDispatcher("/servlet/CommentServlet?method=list").forward(request,
-				response);
+		request.getRequestDispatcher("/servlet/CommentServlet?method=list")
+				.forward(request, response);
 	}
 }

@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class CategoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,28 +34,26 @@ public class CategoryServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		String method = request.getParameter("method");
-		if (method.equals("add")) {
-			add(request, response);
-		}
-		else if (method.equals("list")) {
-			list(request, response);
-		}
-		else if (method.equals("delete")) {
-			delete(request, response);
-		}
-		else if(method.equals("edit"))
-		{
-			preEdit(request, response);
-		}
-		else if(method.equals("update"))
-		{
-			update(request, response);
-		}
-		else
-		{
-			list(request, response);
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("/blog/admin/login.jsp");
+		} else {
+			request.setCharacterEncoding("UTF-8");
+			String method = request.getParameter("method");
+			if (method.equals("add")) {
+				add(request, response);
+			} else if (method.equals("list")) {
+				list(request, response);
+			} else if (method.equals("delete")) {
+				delete(request, response);
+			} else if (method.equals("edit")) {
+				preEdit(request, response);
+			} else if (method.equals("update")) {
+				update(request, response);
+			} else {
+				list(request, response);
+			}
 		}
 	}
 
@@ -87,7 +86,8 @@ public class CategoryServlet extends HttpServlet {
 		} else
 			message = "添加博客分类失败";
 		request.setAttribute("message", message);
-		request.getRequestDispatcher("/admin/Result.jsp").forward(request, response);
+		request.getRequestDispatcher("/admin/Result.jsp").forward(request,
+				response);
 	}
 
 	public void list(HttpServletRequest request, HttpServletResponse response)
@@ -123,8 +123,8 @@ public class CategoryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/admin/adminCategoryList.jsp").forward(request,
-				response);
+		request.getRequestDispatcher("/admin/adminCategoryList.jsp").forward(
+				request, response);
 	}
 
 	public void delete(HttpServletRequest request, HttpServletResponse response)
@@ -153,21 +153,20 @@ public class CategoryServlet extends HttpServlet {
 	public void preEdit(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = request.getParameter("id");
-		Category category=new Category();
+		Category category = new Category();
 		try {
 			Connection conn = null; // 定义数据库连接
 			PreparedStatement pstmt = null; // 定义数据库操作对象
 			Class.forName(DBDRIVER); // 加载驱动程序
 			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-			String sql = "SELECT name,level FROM category where id="
-					+ id;
+			String sql = "SELECT name,level FROM category where id=" + id;
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				category.setName(rs.getString(1));
 				category.setLevel(rs.getInt(2));
 			}
-			//给category对象的id赋值
+			// 给category对象的id赋值
 			category.setId(Integer.parseInt(id));
 			rs.close();
 			pstmt.close(); // 关闭操作
@@ -178,16 +177,16 @@ public class CategoryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("category", category);
-		request.getRequestDispatcher("/admin/editCategory.jsp")
-				.forward(request, response);
+		request.getRequestDispatcher("/admin/editCategory.jsp").forward(
+				request, response);
 	}
 
-	public void update(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	public void update(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		int id = Integer.parseInt(request.getParameter("id"));
-		String name=request.getParameter("name");
-		int level=Integer.parseInt(request.getParameter("level"));
+		String name = request.getParameter("name");
+		int level = Integer.parseInt(request.getParameter("level"));
 		try {
 			Connection conn = null; // 定义数据库连接
 			PreparedStatement pstmt = null; // 定义数据库操作对象
@@ -197,13 +196,13 @@ public class CategoryServlet extends HttpServlet {
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
 			pstmt.setString(1, name);
 			pstmt.setInt(2, level);
-            pstmt.executeUpdate();
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		request.getRequestDispatcher("/servlet/CategoryServlet?method=list").forward(request,
-				response);
+		request.getRequestDispatcher("/servlet/CategoryServlet?method=list")
+				.forward(request, response);
 	}
 }

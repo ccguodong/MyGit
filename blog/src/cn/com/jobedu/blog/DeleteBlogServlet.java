@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class DeleteBlogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -25,23 +26,30 @@ public class DeleteBlogServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		try {
-			Connection conn = null; // 数据库连接
-			Statement stmt = null; // 定义数据库操作对象
-			Class.forName(DBDRIVER); // 加载驱动程序
-			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
-			stmt = conn.createStatement(); // 创建数据库接口对象
-			String sql = "DELETE FROM blog WHERE id=" + id;
-			stmt.executeUpdate(sql); // 执行更新
-			stmt.close(); // 关闭操作
-			conn.close(); // 数据库关闭
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			response.sendRedirect("/blog/admin/login.jsp");
+		} else {
+			String id = request.getParameter("id");
+			try {
+				Connection conn = null; // 数据库连接
+				Statement stmt = null; // 定义数据库操作对象
+				Class.forName(DBDRIVER); // 加载驱动程序
+				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+				stmt = conn.createStatement(); // 创建数据库接口对象
+				String sql = "DELETE FROM blog WHERE id=" + id;
+				stmt.executeUpdate(sql); // 执行更新
+				stmt.close(); // 关闭操作
+				conn.close(); // 数据库关闭
 
-		} catch (SQLException e) {
-			System.out.println(e);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			} catch (SQLException e) {
+				System.out.println(e);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			request.getRequestDispatcher("/servlet/AdminBlogListServlet")
+					.forward(request, response);
 		}
-		request.getRequestDispatcher("/servlet/AdminBlogListServlet").forward(request, response);
 	}
 }
