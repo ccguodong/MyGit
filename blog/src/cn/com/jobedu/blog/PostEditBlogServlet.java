@@ -56,7 +56,7 @@ public class PostEditBlogServlet extends HttpServlet {
 			message = "您修改博客失败";
 		}
 		request.setAttribute("message", message);
-		request.getRequestDispatcher("/editResult.jsp").forward(request,
+		request.getRequestDispatcher("/admin/Result.jsp").forward(request,
 				response);
 	}
 }

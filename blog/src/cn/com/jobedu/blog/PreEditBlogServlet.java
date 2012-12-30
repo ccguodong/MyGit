@@ -51,6 +51,6 @@ public class PreEditBlogServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("blog", blog);
-        request.getRequestDispatcher("/editBlog.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/editBlog.jsp").forward(request, response);
 	}
 }

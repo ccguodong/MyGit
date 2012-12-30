@@ -64,7 +64,7 @@ public class AdminBlogListServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-        request.getRequestDispatcher("/adminBlogList.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/adminBlogList.jsp").forward(request, response);
 	}
 
 }

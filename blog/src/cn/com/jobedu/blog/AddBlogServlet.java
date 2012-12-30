@@ -67,7 +67,7 @@ public class AddBlogServlet extends HttpServlet {
             else
             	message="添加博文不成功";
             request.setAttribute("message", message);
-            request.getRequestDispatcher("/Result.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/Result.jsp").forward(request, response);
 		
 	}
 

@@ -112,7 +112,7 @@ public class CommentServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/adminCommentList.jsp").forward(request,
+		request.getRequestDispatcher("/admin/adminCommentList.jsp").forward(request,
 				response);
 	}
 
@@ -165,7 +165,7 @@ public class CommentServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("comment", comment);
-		request.getRequestDispatcher("/editComment.jsp").forward(request,
+		request.getRequestDispatcher("/admin/editComment.jsp").forward(request,
 				response);
 	}
 	public void upDate(HttpServletRequest request, HttpServletResponse response)

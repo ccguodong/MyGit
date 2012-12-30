@@ -87,7 +87,7 @@ public class CategoryServlet extends HttpServlet {
 		} else
 			message = "添加博客分类失败";
 		request.setAttribute("message", message);
-		request.getRequestDispatcher("/Result.jsp").forward(request, response);
+		request.getRequestDispatcher("/admin/Result.jsp").forward(request, response);
 	}
 
 	public void list(HttpServletRequest request, HttpServletResponse response)
@@ -123,7 +123,7 @@ public class CategoryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/adminCategoryList.jsp").forward(request,
+		request.getRequestDispatcher("/admin/adminCategoryList.jsp").forward(request,
 				response);
 	}
 
@@ -178,7 +178,7 @@ public class CategoryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("category", category);
-		request.getRequestDispatcher("/editCategory.jsp")
+		request.getRequestDispatcher("/admin/editCategory.jsp")
 				.forward(request, response);
 	}
 
