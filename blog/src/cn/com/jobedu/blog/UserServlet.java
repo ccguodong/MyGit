@@ -36,10 +36,11 @@ public class UserServlet extends HttpServlet {
 		}
 		if (method.equals("login")) {
 			login(request, response);
-		}
-		else if(method.equals("logout"))
-		{
+		} else if (method.equals("logout")) {
 			logout(request, response);
+		}else if(method.equals("changepassword"))
+		{
+			changePassword(request, response);
 		}
 	}
 
@@ -91,11 +92,48 @@ public class UserServlet extends HttpServlet {
 
 	public void logout(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//获取session对象
-		HttpSession session =request.getSession();
-		//使session对象失效
+		// 获取session对象
+		HttpSession session = request.getSession();
+		// 使session对象失效
 		session.invalidate();
-		//是页面跳转到index.jsp页面，这里不需要传递参数可以直接使用response跳转
+		// 是页面跳转到index.jsp页面，这里不需要传递参数可以直接使用response跳转
 		response.sendRedirect("/blog");
+	}
+
+	public void changePassword(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		int id=user.getId();
+		String oldPassword = request.getParameter("oldPassword");
+		String newPassword = request.getParameter("newPassword");
+		String reNewPassword = request.getParameter("reNewPassword");
+		if (!user.getPassword().equals(oldPassword)) {
+			request.setAttribute("message", "您输入的原密码错误！");
+			request.getRequestDispatcher("/admin/Result.jsp").forward(request,
+					response);
+		}else if(newPassword.equals(reNewPassword))
+		{
+			try {
+				Connection conn = null; // 定义数据库连接
+				PreparedStatement pstmt = null; // 定义数据库操作对象
+				Class.forName(DBDRIVER); // 加载驱动程序
+				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+				String sql = "update user set password=? where id=" + id;
+				pstmt = conn.prepareStatement(sql); // 预处理sql语句
+				pstmt.setString(1, newPassword);
+				pstmt.executeUpdate();
+			} catch (SQLException e) {
+				System.out.println(e);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			response.sendRedirect("/blog/admin/admin.jsp");
+		}
+		else
+		{
+			request.setAttribute("message", "您两次输入的密码不同！");
+			request.getRequestDispatcher("/admin/Result.jsp").forward(request, response);
+		}
 	}
 }

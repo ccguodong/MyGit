@@ -20,11 +20,11 @@
 					out.print("欢迎," + user.getUsername() + "用户 ");
 			%>
 			| <a href="/blog/servlet/PreAddBlogServlet">发博文</a>
-			| <a href="http://localhost:8080/blog/servlet/GetBlogListServlet">查看博文</a> 
+			| <a href="/blog/servlet/GetBlogListServlet">查看博文</a> 
 			| <a href="/blog/servlet/AdminBlogListServlet">博文管理</a>
-			| <a href="http://localhost:8080/blog/admin/addCategory.jsp">添加分类</a> 
-			| <a href="http://localhost:8080/blog/servlet/CategoryServlet?method=list">分类管理</a>
-			| <a href="http://localhost:8080/blog/servlet/CommentServlet?method=list">评论管理</a>
-			| <a href="#">修改密码</a> 
-			| <a href="http://localhost:8080/blog/servlet/UserServlet?method=logout">退出</a>
+			| <a href="/blog/admin/addCategory.jsp">添加分类</a> 
+			| <a href="/blog/servlet/CategoryServlet?method=list">分类管理</a>
+			| <a href="/blog/servlet/CommentServlet?method=list">评论管理</a>
+			| <a href="/blog/admin/changePassword.jsp">修改密码</a> 
+			| <a href="/blog/servlet/UserServlet?method=logout">退出</a>
 		</div>

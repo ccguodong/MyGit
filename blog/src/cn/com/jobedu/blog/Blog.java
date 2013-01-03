@@ -5,6 +5,8 @@ public class Blog {
 	private String title;
 	private String content;
 	private String createdtime;
+	private String category;
+	private int categoryId;
 	public int getId() {
 		return id;
 	}
@@ -28,6 +30,18 @@ public class Blog {
 	}
 	public void setCreatedTime(String createdTime) {
 		this.createdtime = createdTime;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public int getCategoryId() {
+		return categoryId;
+	}
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 	
 }
