@@ -7,6 +7,7 @@ public class Comment {
 	private String name;
 	private String content;
 	private Date createdtime;
+	private int blogId;
 
 	public int getId() {
 		return id;
@@ -40,7 +41,12 @@ public class Comment {
 		this.createdtime = createdtime;
 	}
 
-	
-	
+	public int getBlogId() {
+		return blogId;
+	}
+
+	public void setBlogId(int blogId) {
+		this.blogId = blogId;
+	}
 
 }

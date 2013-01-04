@@ -39,6 +39,7 @@ public class PostEditBlogServlet extends HttpServlet {
 			String id = request.getParameter("id");
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
+			String categoryId=request.getParameter("category");
 			int result = 0;
 			String message;
 			try {
@@ -46,7 +47,7 @@ public class PostEditBlogServlet extends HttpServlet {
 				PreparedStatement pstmt = null; // 定义数据库操作对象
 				Class.forName(DBDRIVER); // 加载驱动程序
 				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-				String sql = "update blog set title=?,content=? where id=" + id;
+				String sql = "update blog set title=?,content=?,category_id="+categoryId+" where id=" + id;
 				pstmt = conn.prepareStatement(sql); // 预处理sql语句
 				pstmt.setString(1, title);
 				pstmt.setString(2, content);

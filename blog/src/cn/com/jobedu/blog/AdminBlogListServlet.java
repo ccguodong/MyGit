@@ -43,7 +43,7 @@ public class AdminBlogListServlet extends HttpServlet {
 				Class.forName(DBDRIVER); // 加载驱动程序
 				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
 				// 查询blog表中的全部数据并按降序排列
-				String sql = "SELECT id,title,content,createdtime FROM blog order by id desc";
+				String sql = "select b.id as id ,title,content,createdtime, c.name as category from blog b,category c where b.category_id=c.id order by b.id desc";
 				pstmt = conn.prepareStatement(sql); // 预处理sql语句
 				ResultSet rs = pstmt.executeQuery();
 				// 用来计算从数据库中查询的条数
@@ -54,11 +54,13 @@ public class AdminBlogListServlet extends HttpServlet {
 					String title = rs.getString(2);
 					String content = rs.getString(3);
 					String createdtime = rs.getString(4);
+					String category=rs.getString(5);
 					Blog blog = new Blog();
 					blog.setId(id);
 					blog.setTitle(title);
 					blog.setContent(content);
 					blog.setCreatedTime(createdtime);
+					blog.setCategory(category);
 					list.add(sqlnum, blog);
 					sqlnum++;
 				}

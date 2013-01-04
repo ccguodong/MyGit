@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,7 +41,7 @@ public class PreEditBlogServlet extends HttpServlet {
 				PreparedStatement pstmt = null; // 定义数据库操作对象
 				Class.forName(DBDRIVER); // 加载驱动程序
 				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-				String sql = "SELECT id,title,content,createdtime FROM blog where id="
+				String sql = "SELECT id,title,content,createdtime,category_id FROM blog where id="
 						+ id;
 				pstmt = conn.prepareStatement(sql); // 预处理sql语句
 				ResultSet rs = pstmt.executeQuery();
@@ -49,6 +51,7 @@ public class PreEditBlogServlet extends HttpServlet {
 					blog.setTitle(rs.getString(2));
 					blog.setContent(rs.getString(3));
 					blog.setCreatedTime(rs.getString(4));
+					blog.setCategoryId(rs.getInt(5));
 				}
 				rs.close();
 				pstmt.close(); // 关闭操作
@@ -58,7 +61,40 @@ public class PreEditBlogServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+						
+			List<Category> categorys = new ArrayList<Category>();
+			try {
+				Connection conn = null; // 定义数据库连接
+				PreparedStatement pstmt = null; // 定义数据库操作对象
+				Class.forName(DBDRIVER); // 加载驱动程序
+				conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+				String sql = "SELECT id,name,level FROM category order by level DESC,id DESC";
+				pstmt = conn.prepareStatement(sql); // 预处理sql语句
+				ResultSet rs = pstmt.executeQuery();
+				// 用来计算从数据库中查询的条数
+				int sqlnum = 0;
+				while (rs.next()) {
+					int cid = rs.getInt(1);
+					String name = rs.getString(2);
+					int level = rs.getInt(3);
+					Category category = new Category();
+					category.setId(cid);
+					category.setName(name);
+					category.setLevel(level);
+					categorys.add(sqlnum, category);
+					sqlnum++;
+				}
+				rs.close();
+				pstmt.close(); // 关闭操作
+				conn.close(); // 数据库关闭
+			} catch (SQLException e) {
+				System.out.println(e);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
 			request.setAttribute("blog", blog);
+			request.setAttribute("categorys", categorys);
 			request.getRequestDispatcher("/admin/editBlog.jsp").forward(
 					request, response);
 		}

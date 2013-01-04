@@ -36,7 +36,7 @@
 		<tr>
 			<td><%=blog.getId()%></td>
 			<td><%=blog.getTitle()%></td>
-			<td>java web</td>
+			<td><%=blog.getCategory() %></td>
 			<td><%=blog.getCreatedTime()%></td>
 			<td align="center"><a
 				href="/blog/servlet/PreEditBlogServlet?id=<%=blog.getId()%> "><img

@@ -83,7 +83,7 @@ public class CommentServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		// 注意这里用request的跳转方法不行
-		response.sendRedirect("/blog/servlet/GetBlogServlet?id=" + blog_id);
+		response.sendRedirect("/blog/servlet/GetBlogListServlet?id=" + blog_id+"&method=get");
 	}
 
 	public void list(HttpServletRequest request, HttpServletResponse response)

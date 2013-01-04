@@ -38,7 +38,7 @@
 					<a id="6"></a>
 					<h3>
 						<a
-							href="http://localhost:8080/blog/servlet/GetBlogServlet?id=<%=blog.getId()%>"><%=blog.getTitle()%></a>
+							href="/blog/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get" target="_blank"><%=blog.getTitle()%></a>
 					</h3>
 					<%
 						String source = blog.getContent();
@@ -50,7 +50,7 @@
 							out.print(newString + "...");
 					%>
 					<p class="posted"><%=blog.getCreatedTime()%>
-						<a href="<%=blog.getCategoryId()%>"><%=blog.getCategory()%></a> | <a href="tm?method=e&id=6#comments">评论</a>
+						<a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?cid=<%=blog.getCategoryId()%>"><%=blog.getCategory()%></a> | <a href="tm?method=e&id=6#comments">评论</a>
 					</p>
 				</div>
 				<%
@@ -78,7 +78,7 @@
 						for (int i = 0; i < categorylist.size(); i++) {
 							category = (Category) categorylist.get(i);
 					%>
-					<li><a href="<%=category.getId()%>"><%=category.getName()%></a></li>
+					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?cid=<%=category.getId()%>"><%=category.getName()%></a></li>
 					<%
 						}
 					%>
@@ -90,7 +90,7 @@
 						for (int i = 0; i < bloglist.size(); i++) {
 							blog = (Blog) bloglist.get(i);
 					%>
-					<li><a href="http://localhost:8080/blog/servlet/GetBlogServlet?id=<%=blog.getId()%>"><%=blog.getTitle() %></a></li>
+					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get" target="_blank"><%=blog.getTitle() %></a></li>
 					<%
 						}
 					%>
@@ -102,7 +102,7 @@
 				        {
 				        	comment=(Comment)commentlist.get(i);
 				    %>
-					<li><a href="#"><%=comment.getContent() %></a></li>
+					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?id=<%=comment.getBlogId()%>&method=get" target="_blank"><%=comment.getContent() %></a></li>
 					<%
 					}
 					%>

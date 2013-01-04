@@ -28,6 +28,33 @@ public class GetBlogListServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		String method = request.getParameter("method");
+		if (method == null) {
+			main(request, response);
+			request.getRequestDispatcher("/main.jsp")
+					.forward(request, response);
+		}else if(method.equals("get"))
+		{
+			main(request, response);
+			get(request, response);
+			request.getRequestDispatcher("/displayBlog.jsp").forward(request, response);
+		}
+	}
+
+	protected void main(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String cid=request.getParameter("cid");
+		String blogsql=null;
+		//如果cid为空则查询全部的blog，如果cid不为空查询指定category_id的博客
+		if(cid==null)
+		{
+			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id ORDER BY b.id DESC limit 0,4";
+		}
+		else
+		{
+			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id and category_id="+cid+" ORDER BY b.id DESC limit 0,4";
+		}
 		// 声明一个List对象，以存放从数据库中的结果。特别注意！！此变量要声明为局部变量
 		List<Blog> bloglist = new ArrayList<Blog>();
 		try {
@@ -36,8 +63,7 @@ public class GetBlogListServlet extends HttpServlet {
 			Class.forName(DBDRIVER); // 加载驱动程序
 			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
 			// 查询blog表中的全部数据并按降序排列
-			String sql = "SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id ORDER BY b.id DESC limit 0,4";
-			pstmt = conn.prepareStatement(sql); // 预处理sql语句
+			pstmt = conn.prepareStatement(blogsql); // 预处理sql语句
 			ResultSet rs = pstmt.executeQuery();
 			// 用来计算从数据库中查询的条数
 			int sqlnum = 0;
@@ -47,8 +73,8 @@ public class GetBlogListServlet extends HttpServlet {
 				String title = rs.getString(2);
 				String content = rs.getString(3);
 				String createdtime = rs.getString(4);
-				String category=rs.getString(5);
-				int categoryId=rs.getInt(6);
+				String category = rs.getString(5);
+				int categoryId = rs.getInt(6);
 				Blog blog = new Blog();
 				blog.setId(id);
 				blog.setTitle(title);
@@ -67,7 +93,6 @@ public class GetBlogListServlet extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		request.setAttribute("bloglist", bloglist);
 
 		List<Category> categorylist = new ArrayList<Category>();
 		try {
@@ -95,7 +120,6 @@ public class GetBlogListServlet extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		request.setAttribute("categorylist", categorylist);
 
 		List<Comment> commentlist = new ArrayList<Comment>();
 		try {
@@ -103,7 +127,7 @@ public class GetBlogListServlet extends HttpServlet {
 			PreparedStatement pstmt = null;
 			Class.forName(DBDRIVER);
 			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
-			String sql = "SELECT id,name,content FROM comment order by id desc limit 0,2";
+			String sql = "SELECT id,name,content,blog_id FROM comment order by id desc limit 0,2";
 			pstmt = conn.prepareStatement(sql); // 预处理sql语句
 			ResultSet rs = pstmt.executeQuery();
 			// 用来计算从数据库中查询的条数
@@ -113,6 +137,7 @@ public class GetBlogListServlet extends HttpServlet {
 				comment.setId(rs.getInt(1));
 				comment.setName(rs.getString(2));
 				comment.setContent(rs.getString(3));
+				comment.setBlogId(rs.getInt(4));
 				commentlist.add(sqlnum, comment);
 				sqlnum++;
 			}
@@ -124,8 +149,71 @@ public class GetBlogListServlet extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		request.setAttribute("bloglist", bloglist);
+		request.setAttribute("categorylist", categorylist);
 		request.setAttribute("commentlist", commentlist);
-		request.getRequestDispatcher("/main.jsp").forward(request, response);
+	}
+	
+	protected void get(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		//此时的id是取得链接上的id
+		String id = request.getParameter("id");
+		// System.out.println(id);测试
+		//每查询blog中的一条记录，就把它生成一个Blog对象
+		Blog blog=new Blog();
+		try {
+			Connection conn = null; // 定义数据库连接
+			PreparedStatement pstmt = null; // 定义数据库操作对象
+			Class.forName(DBDRIVER); // 加载驱动程序
+			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+			String sql = "SELECT id,title,content,createdtime FROM blog where id="
+					+ id;
+			pstmt = conn.prepareStatement(sql); // 预处理sql语句
+			ResultSet rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				blog.setId(rs.getInt(1));
+				blog.setTitle(rs.getString(2));
+				blog.setContent(rs.getString(3));
+				blog.setCreatedTime(rs.getString(4));
+			}
+			rs.close();
+			pstmt.close(); // 关闭操作
+			conn.close(); // 数据库关闭
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		List<Comment> list=new ArrayList<Comment>();
+		int sqlnum=0;
+		try {
+			Connection conn = null; // 定义数据库连接
+			PreparedStatement pstmt = null; // 定义数据库操作对象
+			Class.forName(DBDRIVER); // 加载驱动程序
+			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS); // 数据库连接
+			String sql = "SELECT id,name,content,createdtime FROM comment where blog_id= "
+					+ id+" order by id desc";
+			pstmt = conn.prepareStatement(sql); // 预处理sql语句
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Comment comment=new Comment();
+				comment.setId(rs.getInt(1));
+				comment.setName(rs.getString(2));
+				comment.setContent(rs.getString(3));
+				comment.setCreatedtime(rs.getTimestamp(4));
+				list.add(sqlnum, comment);
+			}
+			rs.close();
+			pstmt.close(); // 关闭操作
+			conn.close(); // 数据库关闭
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		request.setAttribute("blog", blog);
+		request.setAttribute("list", list);
 	}
 
 }
