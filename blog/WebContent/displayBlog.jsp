@@ -101,6 +101,13 @@
 		<div id="right">
 			<div class="sidebar">
 				<ul>
+					<li class="ul"><a href="/blog/admin/login.jsp">登录</a></li>
+					<li class="ul">&nbsp;&nbsp;</li>
+					<li class="ul"><a href="/blog/admin/regist.jsp?method=add">注册</a></li>
+					<li class="ul">&nbsp;&nbsp;</li>
+					<li class="ul"><a href="/blog/admin/admin.jsp">博客管理首页</a></li>
+				</ul>
+				<ul>
 					<li>张国栋的博客，欢迎大家访问！！</li>
 				</ul>
 				<h2>分类</h2>
@@ -110,7 +117,8 @@
 						for (int i = 0; i < categorylist.size(); i++) {
 							Category category = (Category) categorylist.get(i);
 					%>
-					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?cid=<%=category.getId()%>"><%=category.getName()%></a></li>
+					<li><a
+						href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?cid=<%=category.getId()%>"><%=category.getName()%></a></li>
 					<%
 						}
 					%>
@@ -134,7 +142,8 @@
 						for (int i = 0; i < commentlist.size(); i++) {
 							Comment comment = (Comment) commentlist.get(i);
 					%>
-					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?id=<%=comment.getBlogId()%>&method=get"><%=comment.getContent()%></a></li>
+					<li><a
+						href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?id=<%=comment.getBlogId()%>&method=get"><%=comment.getContent()%></a></li>
 					<%
 						}
 					%>

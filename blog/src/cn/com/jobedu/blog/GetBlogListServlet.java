@@ -49,11 +49,11 @@ public class GetBlogListServlet extends HttpServlet {
 		//如果cid为空则查询全部的blog，如果cid不为空查询指定category_id的博客
 		if(cid==null)
 		{
-			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id ORDER BY b.id DESC limit 0,4";
+			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id ORDER BY b.id DESC";
 		}
 		else
 		{
-			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id and category_id="+cid+" ORDER BY b.id DESC limit 0,4";
+			blogsql="SELECT b.id as id,title,content,createdtime,name as category,c.id as categoryId from blog b,category c WHERE category_id=c.id and category_id="+cid+" ORDER BY b.id DESC";
 		}
 		// 声明一个List对象，以存放从数据库中的结果。特别注意！！此变量要声明为局部变量
 		List<Blog> bloglist = new ArrayList<Blog>();

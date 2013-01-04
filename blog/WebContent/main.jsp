@@ -38,7 +38,8 @@
 					<a id="6"></a>
 					<h3>
 						<a
-							href="/blog/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get" target="_blank"><%=blog.getTitle()%></a>
+							href="/blog/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get"
+							target="_blank"><%=blog.getTitle()%></a>
 					</h3>
 					<%
 						String source = blog.getContent();
@@ -50,16 +51,14 @@
 							out.print(newString + "...");
 					%>
 					<p class="posted"><%=blog.getCreatedTime()%>
-						<a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?cid=<%=blog.getCategoryId()%>"><%=blog.getCategory()%></a> | <a href="tm?method=e&id=6#comments">评论</a>
+						|<a
+							href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?cid=<%=blog.getCategoryId()%>"><%=blog.getCategory()%></a>
+						
 					</p>
 				</div>
 				<%
 					}
 				%>
-				<!-- 产生分页的连接-->
-				&nbsp; 1/2 &nbsp;<a href="tm?method=h&p=2">&gt;&gt;</a>
-				<!-- end list -->
-
 				<br clear="all" />
 			</div>
 			<!-- end content -->
@@ -68,9 +67,16 @@
 
 		<div id="right">
 			<div class="sidebar">
-			<ul>
-			<li>张国栋的博客，欢迎大家访问！！</li>
-			</ul>
+				<ul>
+					<li class="ul"><a href="/blog/admin/login.jsp">登录</a></li>
+					<li class="ul">&nbsp;&nbsp;</li>
+					<li class="ul"><a href="/blog/admin/regist.jsp?method=add">注册</a></li>
+					<li class="ul">&nbsp;&nbsp;</li>
+					<li class="ul"><a href="/blog/admin/admin.jsp">博客管理首页</a></li>
+				</ul>
+				<ul>
+					<li>张国栋的博客，欢迎大家访问！！</li>
+				</ul>
 				<h2>分类</h2>
 				<ul>
 					<li><a href="/blog">全部</a></li>
@@ -78,7 +84,8 @@
 						for (int i = 0; i < categorylist.size(); i++) {
 							category = (Category) categorylist.get(i);
 					%>
-					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?cid=<%=category.getId()%>"><%=category.getName()%></a></li>
+					<li><a
+						href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?cid=<%=category.getId()%>"><%=category.getName()%></a></li>
 					<%
 						}
 					%>
@@ -87,24 +94,33 @@
 				<h2>最近的主题</h2>
 				<ul>
 					<%
-						for (int i = 0; i < bloglist.size(); i++) {
+						int max = 3;
+						if (max >= bloglist.size()) {
+							max = bloglist.size();
+						} else {
+							max = 3;
+						}
+						for (int i = 0; i < max; i++) {
 							blog = (Blog) bloglist.get(i);
 					%>
-					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get" target="_blank"><%=blog.getTitle() %></a></li>
+					<li><a
+						href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?id=<%=blog.getId()%>&method=get"
+						target="_blank"><%=blog.getTitle()%></a></li>
 					<%
 						}
 					%>
 				</ul>
 				<h2>最近的评论</h2>
 				<ul>
-				    <%
-				        for(int i=0;i<commentlist.size();i++)
-				        {
-				        	comment=(Comment)commentlist.get(i);
-				    %>
-					<li><a href="<%=request.getContextPath() %>/servlet/GetBlogListServlet?id=<%=comment.getBlogId()%>&method=get" target="_blank"><%=comment.getContent() %></a></li>
 					<%
-					}
+						for (int i = 0; i < commentlist.size(); i++) {
+							comment = (Comment) commentlist.get(i);
+					%>
+					<li><a
+						href="<%=request.getContextPath()%>/servlet/GetBlogListServlet?id=<%=comment.getBlogId()%>&method=get"
+						target="_blank"><%=comment.getContent()%></a></li>
+					<%
+						}
 					%>
 				</ul>
 

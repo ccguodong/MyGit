@@ -41,6 +41,13 @@ public class UserServlet extends HttpServlet {
 		}else if(method.equals("changepassword"))
 		{
 			changePassword(request, response);
+		}else if(method.equals("add"))
+		{
+			regist(request, response);
+		}
+		else
+		{
+			login(request, response);
 		}
 	}
 
@@ -135,5 +142,38 @@ public class UserServlet extends HttpServlet {
 			request.setAttribute("message", "您两次输入的密码不同！");
 			request.getRequestDispatcher("/admin/Result.jsp").forward(request, response);
 		}
+	}
+	public void regist(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		int result = 0;
+		try {
+			Connection conn = null; // 数据库连接
+			PreparedStatement pstmt = null; // 定义数据库操作对象
+			Class.forName(DBDRIVER); // 加载驱动程序
+			conn = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+			String sql = "insert into user (username,password) values (?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		String message = "";
+		if (result == 1) {
+			message = "您已经成功注册，请登录！";
+		} else
+			message = "注册失败！";
+		request.setAttribute("message", message);
+		request.getRequestDispatcher("/admin/Result.jsp").forward(request,
+				response);
 	}
 }
